@@ -1,0 +1,61 @@
+version: "3"
+
+# Setup some services behind traefik
+
+services:
+
+  start:
+    build: ./containers/start/
+    image: localhost:5000/start:1
+    networks:
+      - traefik_public
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.backend=start"                           # Name the backend
+        - "traefik.port=80"                                 # Internal Traefik port
+        - "traefik.frontend.rule=PathPrefixStrip:/"         # Match and remove the prefix
+        - "traefik.docker.network=traefik_public"           # Network to attach service
+
+  spara:
+    build: ./containers/spara/
+    image: localhost:5000/spara:1
+    networks:
+      - traefik_public
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.backend=spara"                           # Name the backend
+        - "traefik.port=80"                                 # Internal Traefik port
+        - "traefik.frontend.rule=PathPrefixStrip:/spara"  # Match and remove the prefix
+        - "traefik.docker.network=traefik_public"           # Network to attach service
+
+  bolan:
+    build: ./containers/bolan/
+    image: localhost:5000/bolan:1
+    networks:
+      - traefik_public
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.backend=bolan"                           # Name the backend
+        - "traefik.port=80"                                 # Internal Traefik port
+        - "traefik.frontend.rule=PathPrefixStrip:/bolan"  # Match and remove the prefix
+        - "traefik.docker.network=traefik_public"           # Network to attach service
+
+  forsakra:
+    build: ./containers/forsakra/
+    image: localhost:5000/forsakra:1
+    networks:
+      - traefik_public
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.backend=forsakra"                           # Name the backend
+        - "traefik.port=80"                                 # Internal Traefik port
+        - "traefik.frontend.rule=PathPrefixStrip:/forsakra"  # Match and remove the prefix
+        - "traefik.docker.network=traefik_public"           # Network to attach service
+
+networks:
+  traefik_public:
+    external: true
